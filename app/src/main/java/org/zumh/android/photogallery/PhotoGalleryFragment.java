@@ -1,5 +1,6 @@
 package org.zumh.android.photogallery;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -63,8 +65,7 @@ public class PhotoGalleryFragment extends Fragment {
                 int loadBufferPosition = (int) Math.ceil(GRID_VIEW_NUM_SPANS * 2.5);
 
                 if (lastPosition >= (adapter.getItemCount() - gridLayoutManager.getSpanCount() - loadBufferPosition) && !mLoadingData) {
-                    String query = QueryPreferences.getStoredQuery(getActivity());  // possibly null
-                    new FetchItemsTask(query).execute(APPEND_QUERY);
+                    updateItems(APPEND_QUERY);
                 }
             }
 
@@ -98,6 +99,15 @@ public class PhotoGalleryFragment extends Fragment {
         mSearchPhotosLastFetchedPage = 0;
     }
 
+    private void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+
+        if (view != null) {
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -112,6 +122,10 @@ public class PhotoGalleryFragment extends Fragment {
                 Log.d(TAG, "QueryTextSubmit: " + query);
                 QueryPreferences.setStoredQuery(getActivity(), query);
                 updateItems(NEW_QUERY);
+
+                hideSoftKeyboard(getActivity());
+                searchView.onActionViewCollapsed();
+
                 return true;
             }
 
