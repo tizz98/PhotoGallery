@@ -33,7 +33,7 @@ public class FlickrFetchr {
                 throw new IOException(connection.getResponseMessage() + ": with " + urlSpec);
             }
 
-            int bytesRead = 0;
+            int bytesRead;
             byte[] buffer = new byte[1024];
             while ((bytesRead = in.read(buffer)) > 0) {
                 out.write(buffer, 0, bytesRead);
@@ -49,7 +49,7 @@ public class FlickrFetchr {
         return new String(getUrlBytes(urlSpec));
     }
 
-    public List<GalleryItem> fetchItems() {
+    public List<GalleryItem> fetchItems(int page_number) {
         List<GalleryItem> items = new ArrayList<>();
 
         try {
@@ -60,9 +60,9 @@ public class FlickrFetchr {
                     .appendQueryParameter("format", "json")
                     .appendQueryParameter("nojsoncallback", "1")
                     .appendQueryParameter("extras", "url_s")
+                    .appendQueryParameter("page", Integer.toString(page_number))
                     .build().toString();
             String jsonString = getUrlString(url);
-            Log.i(TAG, "Received JSON: " + jsonString);
             JSONObject jsonBody = new JSONObject(jsonString);
             parseItems(items, jsonBody);
         } catch (JSONException je) {
@@ -72,6 +72,10 @@ public class FlickrFetchr {
         }
 
         return items;
+    }
+
+    public List<GalleryItem> fetchItems() {
+        return fetchItems(1);
     }
 
     private void parseItems(List<GalleryItem> items, JSONObject jsonBody) throws IOException, JSONException {
