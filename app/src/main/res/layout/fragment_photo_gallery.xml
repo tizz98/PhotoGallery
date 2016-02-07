@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                                        android:id="@+id/fragment_photo_gallery_recycler_view"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recycler_view_ll_container"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-</android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:id="@+id/progressbar_ll_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            style="@style/Widget.AppCompat.Spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"/> <!-- background must be transparent, otherwise we get a stupid dropdown arrow -->
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_photo_gallery_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</LinearLayout>

@@ -87,7 +87,6 @@ public class FlickrFetchr {
 
         try {
             String jsonString = getUrlString(url);
-            Log.i(TAG, "URL: " + url);
             JSONObject jsonBody = new JSONObject(jsonString);
             parseItems(items, jsonBody);
         } catch (JSONException je) {
