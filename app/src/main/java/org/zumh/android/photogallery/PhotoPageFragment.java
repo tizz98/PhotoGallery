@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class PhotoPageFragment extends VisibleFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_photo_page, container, false);
+        final View v = inflater.inflate(R.layout.fragment_photo_page, container, false);
 
         mProgressBar = (ProgressBar) v.findViewById(R.id.fragment_photo_page_progess_bar);
         mProgressBar.setMax(100);  // WebChromeClient reports in range 0-100
@@ -58,6 +59,25 @@ public class PhotoPageFragment extends VisibleFragment {
         });
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                return false;
+            }
+        });
+        mWebView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    WebView webView = (WebView) v;
+
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_BACK:
+                            if (webView.canGoBack()) {
+                                webView.goBack();
+                                return true;
+                            }
+                            break;
+                    }
+                }
+
                 return false;
             }
         });
