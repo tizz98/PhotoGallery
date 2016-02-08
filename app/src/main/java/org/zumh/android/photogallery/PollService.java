@@ -11,7 +11,6 @@ import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import java.util.List;
@@ -19,9 +18,7 @@ import java.util.List;
 public class PollService extends IntentService {
     private static final String TAG = "PollService";
 
-    // CHANGE
-//    private static final long POLL_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-    private static final int POLL_INTERVAL = 1000 * 60;
+    private static final long POLL_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 
     public static final String ACTION_SHOW_NOTIFICATION = "org.zumh.android.photogallery.SHOW_NOTIFICATION";
     public static final String PERM_PRIVATE = "org.zumh.android.photogallery.PRIVATE";
