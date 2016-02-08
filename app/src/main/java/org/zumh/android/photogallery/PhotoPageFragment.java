@@ -1,6 +1,8 @@
 package org.zumh.android.photogallery;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -59,7 +61,18 @@ public class PhotoPageFragment extends VisibleFragment {
         });
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                return false;
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    return false;
+                } else {
+                    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    PackageManager pm = getActivity().getPackageManager();
+
+                    if (pm.resolveActivity(i, 0) != null) {
+                        startActivity(i);
+                    }
+
+                    return true;
+                }
             }
         });
         mWebView.setOnKeyListener(new View.OnKeyListener() {
