@@ -6,8 +6,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -42,6 +46,7 @@ public class PhotoPageFragment extends VisibleFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         final View v = inflater.inflate(R.layout.fragment_photo_page, container, false);
 
         mProgressBar = (ProgressBar) v.findViewById(R.id.fragment_photo_page_progess_bar);
@@ -97,5 +102,29 @@ public class PhotoPageFragment extends VisibleFragment {
         mWebView.loadUrl(mUri.toString());
 
         return v;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_photo_page, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_go_back:
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                }
+                return true;
+            case R.id.menu_item_go_forward:
+                if (mWebView.canGoForward()) {
+                    mWebView.goForward();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
