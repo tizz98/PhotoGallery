@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +24,7 @@ public class PhotoPageFragment extends VisibleFragment {
     private Uri mUri;
     private WebView mWebView;
     private ProgressBar mProgressBar;
+    private Menu mMenu;
 
     public static PhotoPageFragment newInstance(Uri uri) {
         Bundle args = new Bundle();
@@ -79,6 +79,16 @@ public class PhotoPageFragment extends VisibleFragment {
                     return true;
                 }
             }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                if (mMenu == null) {
+                    return;
+                }
+
+                toggleGoBackwardState(view.canGoBack());
+                toggleGoForwardState(view.canGoForward());
+            }
         });
         mWebView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -108,6 +118,10 @@ public class PhotoPageFragment extends VisibleFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_photo_page, menu);
+
+        mMenu = menu;
+        toggleGoForwardState(false);
+        toggleGoBackwardState(false);
     }
 
     @Override
@@ -126,5 +140,21 @@ public class PhotoPageFragment extends VisibleFragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void toggleGoForwardState(boolean enabled) {
+        toggleArrowMenuBtnState(enabled, R.id.menu_item_go_forward, R.drawable.ic_go_forward_enabled, R.drawable.ic_go_forward_disabled);
+    }
+
+    private void toggleGoBackwardState(boolean enabled) {
+        toggleArrowMenuBtnState(enabled, R.id.menu_item_go_back, R.drawable.ic_go_back_enabled, R.drawable.ic_go_back_disabled);
+    }
+
+    private void toggleArrowMenuBtnState(boolean enabled, int menuId, int enabledDrawableId, int disabledDrawableId) {
+        int iconId = enabled ? enabledDrawableId : disabledDrawableId;
+        MenuItem menuItem = mMenu.findItem(menuId);
+
+        menuItem.setEnabled(enabled);
+        menuItem.setIcon(iconId);
     }
 }
